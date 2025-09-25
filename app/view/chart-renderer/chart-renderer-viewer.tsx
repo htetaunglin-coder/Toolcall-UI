@@ -14,7 +14,7 @@ const ChartRendererViewer = () => {
 
   return (
     <div className="my-4 flex flex-col gap-4">
-      <div className="flex items-center justify-end gap-2"> 
+      <div className="flex items-center justify-end gap-2">
         <Button asChild iconOnly title="Full screen">
           <Link href={"/view/chart-renderer"} target="_blank">
             <ExternalLink />

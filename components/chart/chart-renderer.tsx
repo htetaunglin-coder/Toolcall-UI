@@ -448,7 +448,7 @@ const ChartContainer = ({
   children: React.ReactNode
 }) => {
   return (
-    <Card className="skeleton-bg my-4 flex h-full min-h-80 w-full flex-col items-center justify-between gap-4 bg-transparent shadow-none md:w-[90%]">
+    <Card className="skeleton-bg my-4 flex size-full min-h-80 flex-col items-center justify-between gap-4 bg-transparent shadow-none md:w-[90%]">
       <CardHeader className="flex w-full flex-col items-start space-y-0">
         <CardTitle className="text-lg">{title}</CardTitle>
         <CardDescription className="text-sm text-secondary-foreground">{description}</CardDescription>

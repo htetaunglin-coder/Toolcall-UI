@@ -106,6 +106,7 @@ const Charts: React.FC = () => {
       timeoutRefs.current.forEach((t) => clearTimeout(t))
       timeoutRefs.current = []
     }
+    // eslint-disable-next-line
   }, [])
 
   const scrollToTop = () => {
