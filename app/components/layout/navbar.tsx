@@ -59,7 +59,10 @@ const Navbar = ({ className }: { className?: string }) => {
           </Button>
 
           {renderPages}
-          <Link className="flex items-center gap-1 text-sm text-secondary-foreground hover:text-foreground" href={"#"}>
+          <Link
+            className="flex items-center gap-1 text-sm text-secondary-foreground hover:text-foreground"
+            href={"https://github.com/htetaunglin-coder/Toolcall-UI"}
+            target="_blank">
             <Icons.github className="mr-1" />
             Github
           </Link>
@@ -87,7 +90,7 @@ const Navbar = ({ className }: { className?: string }) => {
                     <Link
                       className="inline-flex items-center gap-2 text-secondary-foreground hover:text-foreground"
                       target="_blank"
-                      href={"#"}>
+                      href={"https://github.com/htetaunglin-coder/Toolcall-UI"}>
                       Github <ExternalLink />
                     </Link>
                     <ThemeToggler />

@@ -7,6 +7,7 @@ import { TooltipProvider } from "../components/ui/tooltip"
 import { Button } from "@mijn-ui/react"
 import { Icons } from "../components/ui/icons"
 import ThemeToggler from "../components/ui/theme-toggler"
+import Link from "next/link"
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -18,9 +19,11 @@ export default function Layout({ children }: { children: ReactNode }) {
           footer: (
             <div className="flex items-center justify-between gap-4">
               <ThemeToggler />
-              <Button variant="ghost">
-                <Icons.github className="size-4" />
-                Github
+              <Button asChild variant="ghost">
+                <Link href="https://github.com/htetaunglin-coder/Toolcall-UI" target="_blank">
+                  <Icons.github className="size-4" />
+                  Github
+                </Link>
               </Button>
             </div>
           ),
