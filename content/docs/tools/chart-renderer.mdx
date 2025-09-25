@@ -1,0 +1,391 @@
+---
+title: Chart Renderer
+description: Create interactive charts from data using AI function calls.
+---
+
+import { CodeCollapsibleWrapper } from "@/components/code-collapsible-wrapper"; 
+import { ChartRendererViewer } from "@/app/view/chart-renderer/chart-renderer-viewer"
+
+<ChartRendererViewer />
+
+## Installation
+
+<Callout title="Note:">
+This component uses [mijnui](https://mijnui.com) components under the hood. If you want to use it with shadcn/ui, you may need to make some changes.
+</Callout>
+
+<Steps>
+  **Copy and paste the following code into your project.**
+
+  <Step>
+  Add the `chart.tsx` file. 
+  This file provides the tooltip and legend components used in charts.
+
+  ```json doc-gen:file
+    {
+      "file": "./components/chart/chart.tsx",
+      "codeblock": {
+        "lang": "tsx",
+        "meta": "title=\"chart.tsx\""
+      }
+    }
+  ```
+  </Step>
+
+  <Step>
+  Add the `chart-renderer.tsx` file. 
+  This file defines the `ChartRenderer` component, which handles rendering the chart visualization.
+
+  ```json doc-gen:file
+    {
+      "file": "./components/chart/chart-renderer.tsx",
+      "codeblock": {
+        "lang": "tsx",
+        "meta": "title=\"chart-renderer.tsx\""
+      }
+    }
+  ```
+  </Step>
+
+  <Step>
+  Add **chart color variables** that will be used as fallback colors when the AI doesn’t provide a `colors` configuration.
+
+  ```css
+  :root {
+    --chart-1: 217 91% 60%;
+    --chart-2: 160 84% 39%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+
+  .dark {
+    --chart-1: 217 91% 60%;
+    --chart-2: 160 84% 39%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+  ```
+  </Step>
+</Steps>
+
+## Quick Start
+
+```tsx
+import { ChartRenderer } from './components/chart-renderer'
+
+const data = [
+  { month: "Jan", sales: 100 },
+  { month: "Feb", sales: 120 },
+  { month: "Mar", sales: 90 }
+]
+
+<ChartRenderer
+  type="bar"
+  title="Monthly Sales"
+  categoryKey="month"
+  valueKeys={["sales"]}
+  data={data}
+/>
+```
+
+## Supported Charts
+
+| Type     | Use For                | Example             |
+| -------- | ---------------------- | ------------------- |
+| `bar`    | Compare categories     | Revenue by quarter  |
+| `line`   | Show trends over time  | Stock prices        |
+| `area`   | Show cumulative data   | Website traffic     |
+| `pie`    | Show parts of whole    | Market share        |
+| `donut`  | Parts of whole + total | Budget breakdown    |
+| `radial` | Progress/scores        | Performance ratings |
+
+## Data Structure
+
+Your data should be an array of objects:
+
+```javascript
+const data = [
+  { category: "value1", metric: 100 },
+  { category: "value2", metric: 150 },
+]
+```
+
+- **categoryKey**: Field name for labels (e.g., "category")
+- **valueKeys**: Array of field names for values (e.g., ["metric"])
+
+### Polar Charts (pie, donut, radial)
+
+Use only **one** value key:
+
+```javascript
+valueKeys: ["sales"] // ✓ Correct // [!code highlight]
+valueKeys: ["sales", "profit"] // ✗ Wrong // [!code --]
+```
+
+## Props
+
+```typescript
+type ChartProps = {
+  type: "bar" | "line" | "area" | "pie" | "donut" | "radial"
+  title: string
+  data: Record<string, unknown>[]
+  categoryKey: string
+  valueKeys: string[]
+
+  // Optional
+  description?: string
+  legend?: boolean
+  orientation?: "horizontal" | "vertical" // bar charts only
+  stacked?: boolean // bar charts only
+  showTotal?: boolean // donut charts only
+  config?: ChartConfig // colors & labels
+}
+```
+
+## Examples
+
+### Bar Chart
+
+```tsx
+<ChartRenderer
+  type="bar"
+  title="Quarterly Revenue"
+  categoryKey="quarter"
+  valueKeys={["revenue"]}
+  data={[
+    { quarter: "Q1", revenue: 100000 },
+    { quarter: "Q2", revenue: 120000 },
+  ]}
+/>
+```
+
+### Multi-Series Line
+
+```tsx
+<ChartRenderer
+  type="line"
+  title="Sales vs Profit"
+  categoryKey="month"
+  valueKeys={["sales", "profit"]}
+  data={[
+    { month: "Jan", sales: 100, profit: 25 },
+    { month: "Feb", sales: 120, profit: 30 },
+  ]}
+  legend={true}
+/>
+```
+
+### Horizontal Stacked Bar
+
+```tsx
+<ChartRenderer
+  type="bar"
+  title="Team Performance"
+  orientation="horizontal"
+  stacked={true}
+  categoryKey="team"
+  valueKeys={["completed", "pending"]}
+  data={[
+    { team: "Engineering", completed: 45, pending: 15 },
+    { team: "Design", completed: 30, pending: 10 },
+  ]}
+/>
+```
+
+### Pie Chart
+
+```tsx
+<ChartRenderer
+  type="pie"
+  title="Market Share"
+  categoryKey="company"
+  valueKeys={["share"]}
+  data={[
+    { company: "Apple", share: 45 },
+    { company: "Google", share: 30 },
+    { company: "Microsoft", share: 25 },
+  ]}
+/>
+```
+
+### Donut with Total
+
+```tsx
+<ChartRenderer
+  type="donut"
+  title="Budget Allocation"
+  showTotal={true}
+  categoryKey="department"
+  valueKeys={["budget"]}
+  data={[
+    { department: "Engineering", budget: 500000 },
+    { department: "Marketing", budget: 200000 },
+  ]}
+/>
+```
+
+## Colors & Labels
+
+Use the `config` prop to customize colors and labels:
+
+### For Bar/Line/Area Charts
+
+```tsx
+config={{
+  series: [
+    { key: "sales", color: "#3B82F6", label: "Sales Revenue" },
+    { key: "profit", color: "#10B981", label: "Net Profit" }
+  ]
+}}
+```
+
+### For Pie/Donut/Radial Charts
+
+```tsx
+config={{
+  items: [
+    { key: "Engineering", color: "#3B82F6", label: "Engineering Team" },
+    { key: "Marketing", color: "#EF4444", label: "Marketing Team" }
+  ]
+}}
+```
+
+
+## AI Integration
+
+### Prompt Instructions
+
+Add this to your AI system prompt:
+
+```md
+When generating charts with create_chart:
+  1. Pick the correct chart type for the data (bar/line/area for trends or comparisons, pie/donut for proportions, radial for 0–100 progress).
+  2. Always set categoryKey + valueKeys. Polar charts allow only 1 valueKey; cartesian charts may have multiple.
+  3. Use defaults unless user requests extras (colors, orientation, etc.).
+```
+
+### JavaScript Schema
+
+```javascript
+const chartTool = {
+  name: "create_chart",
+  description: "Create and display a chart visualization with the provided data",
+  parameters: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      type: {
+        type: "string",
+        enum: ["bar", "line", "area", "pie", "donut", "radial"],
+        description: "The type of chart to create",
+      },
+      title: {
+        type: "string",
+        description: "The title of the chart",
+      },
+      description: {
+        type: ["string", "null"],
+        description: "Optional description",
+      },
+      data: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: {
+            anyOf: [{ type: "string" }, { type: "number" }, { type: "boolean" }, { type: "null" }],
+          },
+        },
+        minItems: 1,
+        description:
+          "Array of row objects. Each row is an object with string keys and values that are typically string, number, or boolean.",
+      },
+      categoryKey: {
+        type: ["string", "null"],
+        description: "Key to use for category values",
+      },
+      valueKeys: {
+        type: ["array", "null"],
+        items: { type: "string" },
+        description: "Keys to use for values",
+      },
+      legend: {
+        type: ["boolean", "null"],
+        description: "Whether to show legend",
+      },
+      orientation: {
+        type: ["string", "null"],
+        enum: ["horizontal", "vertical"],
+        description: "Chart orientation",
+      },
+      stacked: {
+        type: ["boolean", "null"],
+        description: "Whether to stack the chart data",
+      },
+      showTotal: {
+        type: ["boolean", "null"],
+        description: "Whether to show totals (donut charts)",
+      },
+      config: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          series: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                key: { type: "string" },
+                color: {
+                  type: "string",
+                  description:
+                    "Hex color code. If not specified, use theme colors in sequence: #3c83f6, #10b77f, #e88c30, #af57db, #e23670",
+                },
+                label: { type: "string" },
+              },
+              required: ["key"],
+            },
+            description:
+              "Color and label configuration for Cartesian charts (bar, line, area). Colors applied by data object keys.",
+          },
+          items: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                key: { type: "string" },
+                color: {
+                  type: "string",
+                  description:
+                    "Hex color code. If not specified, use theme colors in sequence: #3c83f6, #10b77f, #e88c30, #af57db, #e23670",
+                },
+                label: { type: "string" },
+              },
+              required: ["key"],
+            },
+            description:
+              "Color and label configuration for Polar charts (pie, donut, radial). Colors applied by category values.",
+          },
+        },
+      },
+    },
+    required: [
+      "type",
+      "title",
+      "description",
+      "data",
+      "categoryKey",
+      "valueKeys",
+      "legend",
+      "orientation",
+      "stacked",
+      "showTotal",
+    ],
+  },
+  strict: false,
+  type: "function",
+}
+```
