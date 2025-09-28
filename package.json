@@ -18,6 +18,7 @@
     "@mijn-ui/react": "^0.2.2",
     "@radix-ui/react-tooltip": "^1.2.8",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.23.22",
     "fumadocs-core": "14.7.7",
     "fumadocs-docgen": "^2.0.0",
     "fumadocs-mdx": "11.6.1",
