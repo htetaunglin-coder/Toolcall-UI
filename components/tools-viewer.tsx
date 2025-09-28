@@ -6,7 +6,7 @@ import { ExternalLink, RefreshCcw } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
-const ChartRendererViewer = () => {
+const ToolsViewer = ({ name }: { name: string }) => {
   const [iframeKey, setIframeKey] = useState(0)
   const isMobile = useIsMobile()
 
@@ -16,7 +16,7 @@ const ChartRendererViewer = () => {
     <div className="my-4 flex flex-col gap-4">
       <div className="flex items-center justify-end gap-2">
         <Button asChild iconOnly title="Full screen">
-          <Link href={"/view/chart-renderer"} target="_blank">
+          <Link href={`/view?tools=${name}`} target="_blank">
             <ExternalLink />
           </Link>
         </Button>
@@ -27,7 +27,7 @@ const ChartRendererViewer = () => {
       <div className="w-full overflow-hidden rounded-md border p-4">
         <iframe
           key={iframeKey}
-          src={`/view/chart-renderer`}
+          src={`/view?tools=${name}`}
           height={isMobile ? 320 : 640}
           className="relative z-20 w-full bg-background"
         />
@@ -36,4 +36,4 @@ const ChartRendererViewer = () => {
   )
 }
 
-export { ChartRendererViewer }
+export { ToolsViewer }

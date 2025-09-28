@@ -2,7 +2,6 @@
 
 import React, { memo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@mijn-ui/react-card"
-import { ErrorBoundary } from "react-error-boundary"
 import {
   Area,
   AreaChart,
@@ -22,32 +21,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
+import { z } from "zod"
 import { ChartLegend, ChartTooltip } from "./chart"
+import StatusView from "../status-view"
 
 /* -------------------------------------------------------------------------- */
 /*                                    Types                                   */
 /* -------------------------------------------------------------------------- */
-export type ChartProps = {
-  type: "bar" | "line" | "area" | "pie" | "donut" | "radial"
-  title: string
-  description?: string
-  categoryKey: string
-  valueKeys: string[]
-  data: Record<string, unknown>[]
-  legend?: boolean
-
-  config?: ChartConfig
-
-  // Chart Specific Options
-  // Bar Chart
-  orientation?: "horizontal" | "vertical"
-  stacked?: boolean
-  stackGroups?: Record<string, string[]>
-
-  // Donut Chart
-  showTotal?: boolean
-}
-
 // ChartConfig controls how colors/labels are applied.
 //
 // - series → used in Cartesian charts (bar, line, area).
@@ -62,12 +42,55 @@ export type ChartProps = {
 //
 // This split is needed because Cartesian charts color by column names,
 // while most of the Polar charts color by the category values in the data.
-type ChartConfig = {
-  series?: { key: string; color?: string; label?: string }[]
-  items?: { key: string; color?: string; label?: string }[]
-}
+export const chartConfigSchema = z.object({
+  series: z
+    .array(
+      z.object({
+        key: z.string(),
+        color: z.string().optional(),
+        label: z.string().optional(),
+      }),
+    )
+    .optional(),
 
-const PureChartRenderer = (props: ChartProps) => {
+  items: z
+    .array(
+      z.object({
+        key: z.string(),
+        color: z.string().optional(),
+        label: z.string().optional(),
+      }),
+    )
+    .optional(),
+})
+
+export const chartSchema = z.object({
+  type: z.enum(["bar", "line", "area", "pie", "donut", "radial"]),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  categoryKey: z.string().optional(),
+  valueKeys: z.array(z.string()).optional(),
+  data: z.array(z.record(z.unknown())),
+  legend: z.boolean().optional(),
+  config: chartConfigSchema.optional(),
+
+  /* Chart Specific Options */
+
+  // For Bar Chart
+  orientation: z.enum(["horizontal", "vertical"]).optional(),
+  stacked: z.boolean().optional(),
+  stackGroups: z.record(z.array(z.string())).optional(),
+
+  // For Donut Chart Only
+  showTotal: z.boolean().optional(),
+})
+
+export type ChartConfig = z.infer<typeof chartConfigSchema>
+export type ChartProps = z.infer<typeof chartSchema>
+
+/* -------------------------------------------------------------------------- */
+
+const PureChartView = (props: ChartProps) => {
   const { type, data, config } = props
   const keys = useChartKeys(data, props)
   const colors = useChartColors(config, keys.allKeys)
@@ -75,33 +98,27 @@ const PureChartRenderer = (props: ChartProps) => {
 
   const commonProps = { ...props, data, keys, colors, labels }
 
-  const Chart = () => {
-    switch (type) {
-      case "bar":
-        return <BarChart {...commonProps} />
-      case "line":
-        return <LineChart {...commonProps} />
-      case "area":
-        return <AreaChartComponent {...commonProps} />
-      case "pie":
-        return <PieChart {...commonProps} />
-      case "donut":
-        return <DonutChart {...commonProps} />
-      case "radial":
-        return <RadialChart {...commonProps} />
-      default:
-        return <div>Unsupported Circular type: {type}</div>
-    }
+  switch (type) {
+    case "bar":
+      return <BarChart {...commonProps} />
+    case "line":
+      return <LineChart {...commonProps} />
+    case "area":
+      return <AreaChartComponent {...commonProps} />
+    case "pie":
+      return <PieChart {...commonProps} />
+    case "donut":
+      return <DonutChart {...commonProps} />
+    case "radial":
+      return <RadialChart {...commonProps} />
+    default:
+      return <StatusView status="error" title={`Unsupported Chart type: ${type}`} />
   }
-
-  return (
-    <ErrorBoundary fallback={<div className="text-danger-emphasis">Something Went Wrong!, please try again.</div>}>
-      <Chart />
-    </ErrorBoundary>
-  )
 }
 
-export const ChartRenderer = memo(PureChartRenderer)
+const ChartView = memo(PureChartView)
+
+export default ChartView
 
 /* -------------------------------------------------------------------------- */
 /*                              Chart Components                              */
@@ -194,7 +211,7 @@ const BarChart = ({
           accessibilityLayer
           data={data}
           margin={{
-            left: orientation === "horizontal" ? 36 : 0,
+            left: orientation === "horizontal" ? 24 : 0,
           }}>
           <CartesianGrid
             vertical={!isHorizontal}
@@ -443,12 +460,12 @@ const ChartContainer = ({
   description,
   children,
 }: {
-  title: string
+  title?: string
   description?: string
   children: React.ReactNode
 }) => {
   return (
-    <Card className="skeleton-bg my-4 flex size-full min-h-80 flex-col items-center justify-between gap-4 bg-transparent shadow-none md:w-[90%]">
+    <Card className="skeleton-bg my-4 flex h-full min-h-80 w-[90%] flex-col items-center justify-between gap-4 bg-transparent shadow-none">
       <CardHeader className="flex w-full flex-col items-start space-y-0">
         <CardTitle className="text-lg">{title}</CardTitle>
         <CardDescription className="text-sm text-secondary-foreground">{description}</CardDescription>
@@ -498,10 +515,16 @@ const useChartKeys = (data: Record<string, unknown>[], props: ChartProps): Chart
   }, [data, props.categoryKey, props.valueKeys])
 }
 
-const useChartColors = (config: ChartConfig = {}, keys: string[]) => {
+const useChartColors = (
+  config: ChartConfig = {},
+  keys: string[],
+  data: Record<string, unknown>[] = [],
+  categoryKey?: string,
+) => {
   return React.useMemo(() => {
     const colors: Record<string, string> = {}
 
+    // Handle explicit colors
     config.series?.forEach(({ key, color }) => {
       if (color) colors[key] = color
     })
@@ -510,15 +533,28 @@ const useChartColors = (config: ChartConfig = {}, keys: string[]) => {
       if (color) colors[key] = color
     })
 
-    // Fallback defaults
-    keys.forEach((key, index) => {
-      if (!colors[key]) {
-        colors[key] = `hsl(var(--chart-${(index % 5) + 1}))`
-      }
-    })
+    // Fallback for series - only if config.series exists and has items
+    if (config.series && config.series.length > 0) {
+      keys.forEach((key, index) => {
+        if (!colors[key]) {
+          colors[key] = `hsl(var(--chart-${(index % 5) + 1}))`
+        }
+      })
+    }
+
+    // Fallback for items - only if config.items exists and has items
+    if (config.items && config.items.length > 0 && data.length > 0 && categoryKey) {
+      const uniqueCategoryValues = Array.from(new Set(data.map((item) => String(item[categoryKey]))))
+
+      uniqueCategoryValues.forEach((categoryValue, index) => {
+        if (!colors[categoryValue]) {
+          colors[categoryValue] = `hsl(var(--chart-${(index % 5) + 1}))`
+        }
+      })
+    }
 
     return colors
-  }, [config, keys])
+  }, [config, keys, data, categoryKey])
 }
 
 const useChartLabels = (config: ChartConfig = {}) => {

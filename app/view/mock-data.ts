@@ -1,10 +1,211 @@
-import { ChartProps } from "@/components/chart/chart-renderer"
+import { ChartProps } from "@/components/tools/chart-view/chart-view"
+import { ImageViewProps } from "@/components/tools/image-view/image-view"
+import { ProductViewProps } from "@/components/tools/product-view/product-view"
+import { StatusViewProps } from "@/components/tools/status-view"
 
-export type MockChartProps = {
+type MockStatusProps = {
+  name: string
+} & StatusViewProps
+
+const mockStatusViews: MockStatusProps[] = [
+  {
+    name: "Status Created",
+    title: "Tool Call",
+    description: "Initializing AI tool execution for web search functionality",
+    status: "created",
+  },
+  {
+    name: "Status In Progress",
+    title: "MCP Server Initialize",
+    description: "Starting Model Context Protocol server and loading available tools",
+    status: "in_progress",
+  },
+  {
+    name: "Status Completed",
+    title: "MCP Tool Call",
+    description: "Successfully executed function call through MCP interface",
+    status: "completed",
+  },
+  {
+    name: "Status Error",
+    title: "Service Connection",
+    description: "Failed to establish connection to external AI service - network timeout",
+    status: "error",
+  },
+]
+
+type MockProductProps = {
+  name: string
+} & ProductViewProps
+
+const mockProductViews: MockProductProps[] = [
+  {
+    name: "Single Product View",
+    products: [
+      {
+        id: "prod_001",
+        name: "Wireless Bluetooth Headphones",
+        price: 89.99,
+        description: "Premium quality wireless headphones with noise cancellation",
+        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+        stock: 25,
+      },
+    ],
+  },
+  {
+    name: "Two Product View",
+    products: [
+      {
+        id: "prod_002",
+        name: "Smart Fitness Watch",
+        price: 199.99,
+        description: "Advanced fitness tracking with heart rate monitor",
+        imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+        stock: 18,
+      },
+      {
+        id: "prod_003",
+        name: "Eco-Friendly Water Bottle",
+        price: 24.99,
+        description: "Sustainable stainless steel water bottle",
+        imageUrl: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop",
+        stock: 42,
+      },
+    ],
+  },
+  {
+    name: "Multiple Product View",
+    products: [
+      {
+        id: "prod_004",
+        name: "Professional Coffee Maker",
+        price: 149.99,
+        description: "Barista-quality coffee at home with programmable settings",
+        imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop",
+        stock: 12,
+      },
+      {
+        id: "prod_005",
+        name: "Ergonomic Office Chair",
+        price: 299.99,
+        description: "Comfortable lumbar support chair for long work sessions",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
+        stock: 8,
+      },
+      {
+        id: "prod_006",
+        name: "Portable Bluetooth Speaker",
+        price: 79.99,
+        description: "Waterproof speaker with 20-hour battery life",
+        imageUrl: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
+        stock: 35,
+      },
+      {
+        id: "prod_007",
+        name: "LED Desk Lamp",
+        price: 45.99,
+        description: "Adjustable brightness with USB charging port",
+        imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+        stock: 22,
+      },
+      {
+        id: "prod_008",
+        name: "Wireless Phone Charger",
+        price: 34.99,
+        description: "Fast wireless charging pad compatible with all devices",
+        imageUrl: "https://images.unsplash.com/photo-1609592362803-dc7b4ca7ad2c?w=400&h=400&fit=crop",
+        stock: 56,
+      },
+    ],
+  },
+]
+
+type MockImageProps = {
+  name: string
+} & ImageViewProps
+
+// Mock data for imageViewSchema
+const mockImageViews: MockImageProps[] = [
+  // First view - 1 image
+  {
+    name: "Single Image View",
+    images: [
+      {
+        id: "img-001",
+        src: "https://picsum.photos/800/600",
+        alt: "Beautiful landscape with mountains and lake",
+        width: 800,
+        height: 600,
+      },
+    ],
+  },
+  // Second view - 2 images
+  {
+    name: "Two Image View",
+    images: [
+      {
+        id: 1,
+        src: "https://picsum.photos/400/300",
+        alt: "Urban cityscape at sunset",
+        width: 400,
+        height: 300,
+      },
+      {
+        id: "img-002",
+        src: "https://picsum.photos/600/400",
+        alt: "Forest path in autumn",
+        width: 600,
+        height: 400,
+      },
+    ],
+  },
+  // Third view - 5 images
+  {
+    name: "5 Images",
+    images: [
+      {
+        id: 2,
+        src: "https://picsum.photos/300/200",
+        alt: "Ocean waves at beach",
+        width: 300,
+        height: 200,
+      },
+      {
+        id: "img-003",
+        src: "https://picsum.photos/500/350",
+        // alt is optional, so omitting it here
+        width: 500,
+        height: 350,
+      },
+      {
+        id: "img-004",
+        src: "https://picsum.photos/450/300",
+        alt: "Desert dunes at golden hour",
+        width: 450,
+        height: 300,
+      },
+      {
+        id: 3,
+        src: "https://picsum.photos/700/500",
+        alt: "Snow-capped mountain peaks",
+        // width and height are optional, so omitting them here
+      },
+      {
+        id: "img-005",
+        src: "https://picsum.photos/350/250",
+        alt: "Tropical waterfall",
+        width: 350,
+        height: 250,
+      },
+    ],
+  },
+]
+
+type MockChartProps = {
   name: string
 } & ChartProps
 
-export const mockCharts: MockChartProps[] = [
+const mockChartView: MockChartProps[] = [
   // 1. Simple Bar Chart - One Bar (GDP by sector)
   {
     name: "Simple Bar Chart",
@@ -456,3 +657,10 @@ export const mockCharts: MockChartProps[] = [
     },
   },
 ]
+
+export const data = {
+  chart_view: mockChartView,
+  image_view: mockImageViews,
+  product_view: mockProductViews,
+  status_view: mockStatusViews,
+}

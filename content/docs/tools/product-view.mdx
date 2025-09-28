@@ -1,0 +1,146 @@
+---
+title: Product View
+description: Display product catalogs with responsive carousel layouts and detailed product information.
+---
+
+<ToolsViewer name="product_view" />
+
+<Callout title="Note:">
+  This component uses [mijnui](https://mijnui.com) components under the hood. If you want to use it with shadcn/ui, you may need to make some changes.
+</Callout>
+
+<Steps>
+  **Copy and paste the following code into your project.**
+  
+  <Step>
+  Add the `product-view.tsx` file. 
+  This file defines the `ProductView` component, which handles rendering product catalogs with carousel functionality and responsive layouts.
+
+  ```json doc-gen:file
+    {
+      "file": "./components/tools/product-view/product-view.tsx",
+      "codeblock": {
+        "lang": "tsx",
+        "meta": "title=\"product-view.tsx\""
+      }
+    }
+  ```
+  </Step>
+
+  <Step>
+  Add the `carousel.tsx` component if you don't have it:
+
+  ```json doc-gen:file
+    {
+      "file": "./components/tools/product-view/carousel.tsx",
+      "codeblock": {
+        "lang": "tsx",
+        "meta": "title=\"carousel.tsx\""
+      }
+    }
+  ```
+  </Step>
+</Steps>
+
+
+## Quick Start
+
+```tsx
+import ProductView from './components/product-view'
+
+const products = [
+  {
+    id: "prod-1",
+    name: "Wireless Headphones",
+    price: 99.99,
+    description: "High-quality wireless headphones with noise cancellation",
+    imageUrl: "https://example.com/headphones.jpg",
+    stock: 15
+  },
+  {
+    id: "prod-2",
+    name: "Smart Watch",
+    price: 249.99,
+    description: "Feature-rich smartwatch with health tracking",
+    imageUrl: "https://example.com/watch.jpg",
+    stock: 8
+  }
+]
+
+<ProductView products={products} />
+```
+
+## Layout Modes
+
+|Layout|When Used|Display Style|
+|---|---|---|
+|**Single**|1 product only|Large card with side-by-side layout on desktop|
+|**Carousel**|2+ products|Horizontal scrolling carousel with navigation|
+
+## AI Integration
+
+
+### JavaScript Schema
+
+```javascript
+const productViewTool = {
+  name: "product_view",
+  description: "Display a catalog of products with carousel navigation",
+  parameters: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      products: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            id: {
+              type: "string",
+              description: "Unique identifier for the product",
+            },
+            name: {
+              type: "string",
+              description: "Product name or title",
+            },
+            price: {
+              type: ["number", "null"],
+              minimum: 0,
+              description: "Product price in dollars (non-negative)",
+            },
+            description: {
+              type: ["string", "null"],
+              description:
+                "Product description (will be truncated if too long)",
+            },
+            imageUrl: {
+              type: ["string", "null"],
+              description: "Valid URL to product image",
+            },
+            stock: {
+              type: ["integer", "null"],
+              minimum: 0,
+              description:
+                "Number of units in stock (non-negative integer)",
+            },
+          },
+          required: [
+            "id",
+            "name",
+            "price",
+            "description",
+            "imageUrl",
+            "stock",
+          ],
+        },
+        minItems: 0,
+        description: "Array of product objects to display",
+      },
+    },
+    required: ["products"],
+  },
+  strict: true,
+  type: "function",
+}
+```

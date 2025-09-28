@@ -1,0 +1,132 @@
+---
+title: Image View
+description: Display and manage image galleries with lightbox functionality, download capabilities, and error handling.
+---
+
+<ToolsViewer name="image_view" />
+
+## Installation
+
+<Callout title="Note:">
+  This component uses [mijnui](https://mijnui.com) components under the hood. If you want to use it with shadcn/ui, you may need to make some changes.
+</Callout>
+
+<Steps>
+
+  <Step>
+  Install the required dependencies:
+  
+  ```package-install
+  react-photo-view
+  ```
+  </Step>
+
+  **Copy and paste the following code into your project.**
+
+  <Step>
+  Add the `image-view.tsx` file. 
+  This file defines the `ImageView` component, which handles rendering image galleries with lightbox viewing, download functionality, and error states.
+
+  ```json doc-gen:file
+    {
+      "file": "./components/tools/image-view/image-view.tsx",
+      "codeblock": {
+        "lang": "tsx",
+        "meta": "title=\"image-view.tsx\""
+      }
+    }
+  ```
+  </Step>
+
+
+  <Step>
+  Add the `spinner.tsx` component:
+  
+  ```json doc-gen:file
+    {
+      "file": "./components/tools/image-view/spinner.tsx",
+      "codeblock": {
+        "lang": "tsx",
+        "meta": "title=\"spinner.tsx\""
+      }
+    }
+  ```
+  </Step>
+</Steps>
+
+## Quick Start
+
+```tsx
+import ImageView from './components/image-view'
+
+const images = [
+  {
+    id: "img-1",
+    src: "https://example.com/image1.jpg",
+    alt: "Description of image 1",
+    width: 800,
+    height: 600
+  },
+  {
+    id: "img-2", 
+    src: "https://example.com/image2.jpg",
+    alt: "Description of image 2"
+  }
+]
+
+<ImageView images={images} />
+```
+
+## AI Integration
+
+### JavaScript Schema
+
+```javascript
+const imageViewTool =  {
+  name: "image_view",
+  description:
+    "Display a gallery of images with lightbox functionality",
+  parameters: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      images: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            id: {
+              type: "string",
+              description: "Unique identifier for the image",
+            },
+            src: {
+              type: "string",
+              description: "Valid URL to the image file",
+            },
+            alt: {
+              type: ["string", "null"],
+              description:
+                "Alt text for accessibility - highly recommended",
+            },
+            width: {
+              type: ["number", "null"],
+              description: "Image width in pixels",
+            },
+            height: {
+              type: ["number", "null"],
+              description: "Image height in pixels",
+            },
+          },
+          required: ["id", "src", "alt", "width", "height"],
+        },
+        minItems: 0,
+        description: "Array of image objects to display",
+      },
+    },
+    required: ["images"],
+  },
+  strict: true,
+  type: "function",
+}
+```

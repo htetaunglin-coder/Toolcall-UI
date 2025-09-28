@@ -1,0 +1,87 @@
+---
+title: Status View
+description: Display operation status with animated loading states and visual indicators.
+---
+
+<ToolsViewer name="status_view" />
+
+## Installation
+
+<Callout title="Note:">
+This component uses [mijnui](https://mijnui.com) components under the hood. If you want to use it with shadcn/ui, you may need to make some changes.
+</Callout>
+
+<Steps>
+  **Copy and paste the following code into your project.**
+
+  <Step>
+  Add the `status-view.tsx` file. 
+  This file defines the `StatusView` component, which handles rendering status indicators with animated loading states.
+
+  ```json doc-gen:file
+    {
+      "file": "./components/tools/status-view.tsx",
+      "codeblock": {
+        "lang": "tsx",
+        "meta": "title=\"status-view.tsx\""
+      }
+    }
+  ```
+  </Step>
+</Steps>
+
+
+## Quick Start
+
+```tsx
+import StatusView from './components/status-view'
+
+<StatusView
+  status="in_progress"
+  title="Processing your request"
+  description="Please wait while we handle your data"
+/>
+```
+
+## Status Types
+
+|Status|Appearance|Use For|
+|---|---|---|
+|`created`|Gray indicator|Queued operations|
+|`in_progress`|Pulsing orange + animated text|Active processing|
+|`completed`|Green indicator|Successful operations|
+|`error`|Red background + indicator|Failed operations|
+
+
+## AI Integration
+
+### Prompt Instructions
+
+```javascript
+const statusTool = {
+  name: "status_view",
+  description: "Display operation status with visual indicators and messages",
+  parameters: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      status: {
+        type: "string",
+        enum: ["created", "in_progress", "completed", "error"],
+        description: "The current status of the operation",
+      },
+      title: {
+        type: "string",
+        description: "The title of the status view",
+      },
+      description: {
+        type: ["string", "null"],
+        description: "Optional description - uses default if not provided",
+      },
+    },
+    required: ["status", "title", "description"],
+  },
+  strict: true,
+  type: "function",
+}
+```

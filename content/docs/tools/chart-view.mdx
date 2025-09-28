@@ -1,12 +1,9 @@
 ---
-title: Chart Renderer
+title: Chart View
 description: Create interactive charts from data using AI function calls.
 ---
 
-import { CodeCollapsibleWrapper } from "@/components/code-collapsible-wrapper"; 
-import { ChartRendererViewer } from "@/app/view/chart-renderer/chart-renderer-viewer"
-
-<ChartRendererViewer />
+<ToolsViewer name="chart_view" />
 
 ## Installation
 
@@ -23,7 +20,7 @@ This component uses [mijnui](https://mijnui.com) components under the hood. If y
 
   ```json doc-gen:file
     {
-      "file": "./components/chart/chart.tsx",
+      "file": "./components/tools/chart-view/chart.tsx",
       "codeblock": {
         "lang": "tsx",
         "meta": "title=\"chart.tsx\""
@@ -33,15 +30,15 @@ This component uses [mijnui](https://mijnui.com) components under the hood. If y
   </Step>
 
   <Step>
-  Add the `chart-renderer.tsx` file. 
-  This file defines the `ChartRenderer` component, which handles rendering the chart visualization.
+  Add the `chart-view.tsx` file. 
+  This file defines the `ChartView` component, which handles rendering the chart visualization.
 
   ```json doc-gen:file
     {
-      "file": "./components/chart/chart-renderer.tsx",
+      "file": "./components/tools/chart-view/chart-view.tsx",
       "codeblock": {
         "lang": "tsx",
-        "meta": "title=\"chart-renderer.tsx\""
+        "meta": "title=\"chart-view.tsx\""
       }
     }
   ```
@@ -73,7 +70,7 @@ This component uses [mijnui](https://mijnui.com) components under the hood. If y
 ## Quick Start
 
 ```tsx
-import { ChartRenderer } from './components/chart-renderer'
+import { ChartView } from './components/chart-view'
 
 const data = [
   { month: "Jan", sales: 100 },
@@ -81,7 +78,7 @@ const data = [
   { month: "Mar", sales: 90 }
 ]
 
-<ChartRenderer
+<ChartView
   type="bar"
   title="Monthly Sales"
   categoryKey="month"
@@ -149,7 +146,7 @@ type ChartProps = {
 ### Bar Chart
 
 ```tsx
-<ChartRenderer
+<ChartView
   type="bar"
   title="Quarterly Revenue"
   categoryKey="quarter"
@@ -164,7 +161,7 @@ type ChartProps = {
 ### Multi-Series Line
 
 ```tsx
-<ChartRenderer
+<ChartView
   type="line"
   title="Sales vs Profit"
   categoryKey="month"
@@ -180,7 +177,7 @@ type ChartProps = {
 ### Horizontal Stacked Bar
 
 ```tsx
-<ChartRenderer
+<ChartView
   type="bar"
   title="Team Performance"
   orientation="horizontal"
@@ -197,7 +194,7 @@ type ChartProps = {
 ### Pie Chart
 
 ```tsx
-<ChartRenderer
+<ChartView
   type="pie"
   title="Market Share"
   categoryKey="company"
@@ -213,7 +210,7 @@ type ChartProps = {
 ### Donut with Total
 
 ```tsx
-<ChartRenderer
+<ChartView
   type="donut"
   title="Budget Allocation"
   showTotal={true}
@@ -260,7 +257,7 @@ config={{
 Add this to your AI system prompt:
 
 ```md
-When generating charts with create_chart:
+When generating charts with chart_view:
   1. Pick the correct chart type for the data (bar/line/area for trends or comparisons, pie/donut for proportions, radial for 0–100 progress).
   2. Always set categoryKey + valueKeys. Polar charts allow only 1 valueKey; cartesian charts may have multiple.
   3. Use defaults unless user requests extras (colors, orientation, etc.).
@@ -270,7 +267,7 @@ When generating charts with create_chart:
 
 ```javascript
 const chartTool = {
-  name: "create_chart",
+  name: "chart_view",
   description: "Create and display a chart visualization with the provided data",
   parameters: {
     type: "object",
