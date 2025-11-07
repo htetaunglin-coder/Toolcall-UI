@@ -15,6 +15,18 @@ const mockStatusViews: MockStatusProps[] = [
     status: "created",
   },
   {
+    name: "Status Waiting",
+    title: "Waiting",
+    description: "Request is queued and awaiting available processing resources",
+    status: "in_progress",
+  },
+  {
+    name: "Status Processing",
+    title: "Processing",
+    description: "AI model is actively processing your request and generating output",
+    status: "in_progress",
+  },
+  {
     name: "Status In Progress",
     title: "MCP Server Initialize",
     description: "Starting Model Context Protocol server and loading available tools",
@@ -28,8 +40,8 @@ const mockStatusViews: MockStatusProps[] = [
   },
   {
     name: "Status Error",
-    title: "Service Connection",
-    description: "Failed to establish connection to external AI service - network timeout",
+    title: "Error",
+    description: "An unexpected error occurred while handling the AI tool execution",
     status: "error",
   },
 ]
